@@ -1,0 +1,114 @@
+===========================================
+AI INTERVIEWER ASSISTANT - DEVELOPMENT PLAN
+===========================================
+
+GOAL:
+-----
+Build an AI Interviewer app that:
+- Accepts a resume
+- Generates interview questions using LangChain
+- Asks questions via audio (TTS)
+- Accepts user audio response and converts it to text (STT)
+- Uses Streamlit frontend + FastAPI backend
+
+===========================
+1️⃣ SETUP & STRUCTURE
+===========================
+- Create virtual environment:
+    python -m venv venv
+    .\venv\Scripts\activate (Windows)
+
+- Install dependencies:
+    pip install -r requirements.txt
+
+- Create the following structure:
+
+    ai_interviewer/
+    ├── app/                 # FastAPI backend
+    ├── streamlit_app/       # Streamlit frontend
+    ├── utils/               # Common helpers
+    ├── requirements.txt
+    ├── project_plan.txt     <-- This file
+
+===========================
+2️⃣ BACKEND (FastAPI)
+===========================
+
+▶ app/main.py
+    - Entry point for FastAPI app
+    - Include routers: resume, question, audio
+
+▶ app/routes/resume.py
+    - POST /upload_resume
+    - Extract text using PyMuPDF or python-docx
+
+▶ app/routes/question.py
+    - POST /generate_questions
+    - Use LangChain to generate interview questions from text
+
+▶ app/routes/audio.py
+    - POST /text_to_speech -> returns audio bytes
+    - POST /speech_to_text -> transcribe user answer
+
+▶ app/services/
+    - parser.py         --> Parse resume files
+    - question_gen.py   --> Generate questions using LangChain
+    - tts.py            --> Convert text to audio
+    - stt.py            --> Convert audio to text (Whisper)
+
+===========================
+3️⃣ FRONTEND (Streamlit)
+===========================
+
+▶ streamlit_app/main.py
+    - Main Streamlit app UI
+    - Upload resume and trigger FastAPI endpoint
+    - Start interview session
+
+▶ streamlit_app/components/
+    - upload_resume.py     --> Upload UI
+    - interview_ui.py      --> Display questions and play audio
+    - audio_recorder.py    --> Capture user audio via streamlit-webrtc
+
+===========================
+4️⃣ UTILS
+===========================
+
+▶ utils/audio_helpers.py
+    - Convert audio format if needed
+    - Save/load .wav or .mp3 files
+
+▶ utils/resume_utils.py
+    - Validate file formats
+    - Preprocess extracted text
+
+===========================
+5️⃣ WHERE TO START CODING
+===========================
+
+✅ STEP 1: Backend API
+- Start with `app/main.py`
+- Build resume upload route first: `resume.py` + `parser.py`
+
+✅ STEP 2: Question Generation
+- Add LangChain logic in `question_gen.py`
+- Use prompt template for interview questions
+
+✅ STEP 3: Audio Backend
+- Use gTTS or pyttsx3 in `tts.py`
+- Use Whisper in `stt.py`
+
+✅ STEP 4: Streamlit UI
+- Build basic UI: `streamlit_app/main.py`
+- Implement interview flow (one-by-one question)
+
+✅ STEP 5: Audio Integration
+- Integrate Streamlit audio capture and playback
+
+✅ STEP 6: Final Integration
+- Connect frontend and backend with `requests`
+- Test end-to-end flow
+
+===========================
+DONE 🎯
+===========================
